@@ -29,7 +29,7 @@ export class PresidenteComponent implements OnInit {
   public modelPromesa: PromesaPresidente;
   public partido;
   constructor(
-    // private _router: Router,
+    private _router: Router,
     private _uploadService: UploadService,
     private _userService: UserService,
     private _presidenteService: PresidenteService,

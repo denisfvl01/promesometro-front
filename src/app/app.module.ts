@@ -15,6 +15,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { PresidenteComponent } from './components/presidente/presidente.component';
 import { AlcaldeComponent } from './components/alcalde/alcalde.component';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
     NgbModalModule,
     ModalModule.forRoot(),
     ProgressbarModule.forRoot(),
+    CarouselModule.forRoot(),
     ],
   exports:[
     BrowserModule,

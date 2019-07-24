@@ -28,7 +28,8 @@
 <header class="bg-info text-center py-5 mb-4">
   <div class="container-header">
     <h1 class="font-weight-light text-white">Conoce al alclade del partido {{ partido.nombre }}</h1>
-    <button type="button" class="btn btn-warning col-9" (click)="Add.show()" *ngIf="!alcalde">Agregar
+    <button type="button" class="btn btn-warning col-9" (click)="Add.show()"
+      *ngIf="!alcalde && !identity.rol == 'ROL_USUARIO'">Agregar
       alcalde</button>
   </div>
 </header>
@@ -44,7 +45,7 @@
           <h5 class="card-title mb-0" *ngIf="alcalde.nombre">{{ alcalde.nombre }}</h5>
         </div>
         <div class="card-footer col-12 align-content-stretch">
-          <p style="text-align: center">
+          <p style="text-align: center" *ngIf="!identity.rol == 'ROL_USUARIO'">
             <button type="button" class="btn btn-info botones"
               (click)="setAlcalde(alcalde); Edit.show()">Editar</button>
             <button type="button" class="btn btn-warning botones"
@@ -53,12 +54,13 @@
         </div>
       </div>
     </div>
-    <div class="col-sm text-col-1">
+    <div class="col-sm text-col-1" *ngIf="alcalde">
       <h1>
         <small class="text-primary" style="font-size: 30px; width: 100%; line-height: 1;">Votación de
           promesas</small><br>
+        <button type="button" class="btn btn-warning col-12" (click)="AddPromesa.show()"
+          *ngIf="!identity.rol == 'ROL_USUARIO'">Agregar promesa</button>
       </h1>
-      <button type="button" class="btn btn-warning col-12" (click)="AddPromesa.show()">Agregar promesa</button>
       <div class="col-sm" *ngFor="let promesa of promesas; let i = index">
         <div class="card border-1 shadow">
           <div class="card-header">
@@ -71,13 +73,14 @@
               <button type="button" class="btn btn-warning botones" (click)="votarNo(promesa)">No</button>
             </div><br><br>
             <div class="mb-2">
-              <progressbar class="progress-striped active" [value]="100" type="danger"><i>{{promesa.votoSi}} /
+              <progressbar class="progress-striped active" [value]="promesas[i].votoSi" type="danger">
+                <i>{{promesa.votoSi}} /
                   {{promesa.votoSi + promesa.votoNo}}</i></progressbar>
             </div>
           </div>
           <div class="card-footer col-12 align-content-stretch">
             <div class="btn-group col-12">
-              <p style="text-align: center" class="col-12">
+              <p style="text-align: center" class="col-12" *ngIf="!identity.rol == 'ROL_USUARIO'">
                 <button type="button" class="btn btn-info botones"
                   (click)="setPromesa(promesa); EditPromesa.show()">Editar</button>
                 <button type="button" class="btn btn-warning botones"

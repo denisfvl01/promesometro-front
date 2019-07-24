@@ -13,8 +13,8 @@ import { AlcaldeComponent } from './components/alcalde/alcalde.component';
 
 
 const appRoutes: Routes = [
-{path: '', component: HomeComponent},
-{path: '', redirectTo: 'home',pathMatch: 'full'},
+{path: '', component: LoginComponent},
+{path: '', redirectTo: 'login',pathMatch: 'full'},
 {path: 'home', component: HomeComponent},
 {path: 'register', component: RegisterComponent},
 {path: 'login', component: LoginComponent},
@@ -22,7 +22,7 @@ const appRoutes: Routes = [
 {path: 'partidos', component: PartidosComponent},
 {path: 'presidente', component: PresidenteComponent},
 {path: 'alcalde', component: AlcaldeComponent},
-{path: '**', component: HomeComponent},
+{path: '**', component: LoginComponent},
 ]
 export const appRoutingProviders: any[] = [];
 export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
