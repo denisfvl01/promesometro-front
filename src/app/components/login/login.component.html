@@ -1,0 +1,49 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" routerLink="/home">
+    <img src="../../../assets/icons/prom.ico" width="30" height="30" alt=""
+      style="margin-top: -7px; background-color: white; border-radius: 100px">&nbsp;PROMESÓMETRO
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/home">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/register">Registrarse</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <form #loginForm="ngForm" (ngSubmit)="login()">
+    <div class="card login-form">
+      <div class="card-title">
+        <img src="../../../assets/images/login.png" alt="..." width="100" height="200" class="card-img-top img-card">
+        <h2 class="col-12">Inicio de sesión</h2>
+      </div>
+      <hr>
+    <div class="card-body">
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" name="email" #email="ngModel" [(ngModel)]="user.email" class="form-control"
+        id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" name="password" #password="ngModel" [(ngModel)]="user.password" class="form-control"
+          id="exampleInputPassword1" placeholder="Password" />
+        </div>
+      </div>
+      <div class="card-footer">
+        <button type="submit" class="btn btn-success col-12">Iniciar</button>
+      </div>
+    </div>
+  </form>
+</div>

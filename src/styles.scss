@@ -1,1 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+
+.content {
+  padding: 20px;
+}
+
+#sticky-footer {
+  flex-shrink: none;
+  grid-row-start: 2;
+  grid-row-end: 3;
+}

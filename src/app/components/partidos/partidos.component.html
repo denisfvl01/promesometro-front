@@ -1,0 +1,154 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" routerLink="/home">
+    <img src="../../../assets/icons/prom.ico" width="30" height="30" alt=""
+      style="margin-top: -7px; background-color: white; border-radius: 100px">&nbsp;PROMESÓMETRO
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/home">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/perfil">Perfil</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<header class="bg-info text-center py-5 mb-4">
+  <div class="container-header">
+    <h1 class="font-weight-light text-white">Conoce los partidos y cada uno de sus candidatos</h1>
+    <button type="button" class="btn btn-warning col-9" (click)="Add.show()">Agregar
+      partido</button>
+  </div>
+</header>
+<div class="container">
+  <div class="row">
+    <div class="col-xl-3 col-md-6 mb-4" *ngFor="let partido of partidos">
+      <div class="card border-0 shadow">
+        <img src="{{ url + 'obtener-imagen-partido/' + partido.image }}" class="card-img-top" alt="..."
+          *ngIf="partido.image">
+        <img src="../../../assets/images/partidos.jpg" class="card-img-top" alt="..." *ngIf="!partido.image">
+        <div class="card-body text-center">
+          <h5 class="card-title mb-0">{{ partido.nombre }}</h5>
+          <div class="card-text text-black-50">{{ partido.descripcion }}</div>
+        </div>
+        <div class="card-footer col-12 align-content-stretch">
+          <p style="text-align: center">
+            <button type="button" class="btn btn-info botones" (click)="vistaPresidente(partido)">Presidente</button>
+            <button type="button" class="btn btn-warning botones" (click)="vistaAlcalde(partido)">Alcalde</button>
+            <button type="button" class="btn btn-info botones" (click)="setPartido(partido); Edit.show()">Editar</button>
+            <button type="button" class="btn btn-warning botones" (click)="setPartido(partido); Delete.show()">Eliminar</button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR PARTIDO -->
+<div bsModal #Add="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg" role="document">
+    <form #formAgregarPartido="ngForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="dialog-sizes-name1" class="modal-title pull-left">Agregando partido...</h4>
+          <button type="button" class="close pull-right" (click)="Add.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" name="nombre" #nombre="ngModel" [(ngModel)]="modelPartido.nombre" class="form-control"
+              placeholder="Enter description">
+          </div>
+          <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <input type="text" name="descripcion" #descripcion="ngModel" [(ngModel)]="modelPartido.descripcion"
+              class="form-control" placeholder="Enter description">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary col-4" data-dismiss="modal"
+            (click)="Add.hide()">Close</button>
+          <button type="button" (click)="agregar()" class="btn btn-outline-success col-4">Agregar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL EDITAR PARTIDO -->
+<div bsModal #Edit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg" role="document">
+    <form #formAgregarPartido="ngForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="dialog-sizes-name1" class="modal-title pull-left">Editando partido...</h4>
+          <button type="button" class="close pull-right" (click)="Edit.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" name="nombre" #nombre="ngModel" [(ngModel)]="modelPartido.nombre" class="form-control"
+              placeholder="Enter description">
+          </div>
+          <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <input type="text" name="descripcion" #descripcion="ngModel" [(ngModel)]="modelPartido.descripcion"
+              class="form-control" placeholder="Enter description">
+          </div>
+          <div class="form-group">
+            <label for="image">Imagen</label><br>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupFileAddon01">Actualizar</span>
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="inputGroupFile01 image"
+                  aria-describedby="inputGroupFileAddon01" (change)='fileChangeEvent($event)'>
+                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary col-4" data-dismiss="modal"
+            (click)="Edit.hide()">Close</button>
+          <button type="button" (click)="editar()" class="btn btn-outline-success col-4">Editar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- MODAL ELIMINAR PARTIDO -->
+<div bsModal #Delete="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg" role="document">
+    <form #formAgregarPartido="ngForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="dialog-sizes-name1" class="modal-title pull-left">Elimimando partido...</h4>
+          <button type="button" class="close pull-right" (click)="Delete.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Eliminará el partido {{ modelPartido.nombre }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary col-4" data-dismiss="modal"
+            (click)="Delete.hide()">Close</button>
+          <button type="button" (click)="eliminar(); Delete.hide()" class="btn btn-outline-danger col-4">Sí</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

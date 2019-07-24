@@ -1,0 +1,288 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" routerLink="/home">
+    <img src="../../../assets/icons/prom.ico" width="30" height="30" alt=""
+      style="margin-top: -7px; background-color: white; border-radius: 100px">&nbsp;PROMESÓMETRO
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/home">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/perfil">Perfil</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-0">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/partidos">Regresar</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<header class="bg-info text-center py-5 mb-4">
+  <div class="container-header">
+    <h1 class="font-weight-light text-white">Conoce al presidente del partido {{ partido.nombre }}</h1>
+    <button type="button" class="btn btn-warning col-9" (click)="Add.show()" *ngIf="!presidente">Agregar
+      presidente</button>
+  </div>
+</header>
+
+<div class="container-2 col-12">
+  <div class="row">
+    <div class="col-sm" *ngFor="let presidente of presidentes">
+      <div class="card border-0 shadow">
+        <img src="{{ url + 'obtener-imagen-presidente/' + presidente.image }}" class="card-img-top" alt="..."
+          *ngIf="presidente.image">
+        <img src="../../../assets/images/partidos.jpg" class="card-img-top" alt="..." *ngIf="!presidente.image">
+        <div class="card-body text-center">
+          <h5 class="card-title mb-0" *ngIf="presidente.nombre">{{ presidente.nombre }}</h5>
+        </div>
+        <div class="card-footer col-12 align-content-stretch">
+          <p style="text-align: center">
+            <button type="button" class="btn btn-info botones"
+              (click)="setPresidente(presidente); Edit.show()">Editar</button>
+            <button type="button" class="btn btn-warning botones"
+              (click)="setPresidente(presidente); Delete.show()">Eliminar</button>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm text-col-1">
+      <h1>
+        <small class="text-primary" style="font-size: 30px; width: 100%; line-height: 1;">Votación de
+          promesas</small><br>
+        <button type="button" class="btn btn-warning col-12" (click)="AddPromesa.show()">Agregar promesa</button>
+      </h1>
+      <div class="col-sm" *ngFor="let promesa of promesas; let i = index">
+        <div class="card border-1 shadow">
+          <div class="card-header">
+            <h5 class="card-title mb-0">{{ promesa.descripcion }}</h5>
+          </div>
+          <div class="card-body">
+            <a>¿Está cumpliendo con la promesa? </a>
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-warning botones" (click)="votarSi(promesa)">Sí</button>
+              <button type="button" class="btn btn-warning botones" (click)="votarNo(promesa)">No</button>
+            </div><br><br>
+            <div class="mb-2">
+              <progressbar class="progress-striped active" [value]="100" type="danger"><i>{{promesa.votoSi}} /
+                  {{promesa.votoSi + promesa.votoNo}}</i></progressbar>
+            </div>
+          </div>
+          <div class="card-footer col-12 align-content-stretch">
+            <div class="btn-group col-12">
+              <p style="text-align: center" class="col-12">
+                <button type="button" class="btn btn-info botones"
+                  (click)="setPromesa(promesa); EditPromesa.show()">Editar</button>
+                <button type="button" class="btn btn-warning botones"
+                  (click)="setPromesa(promesa); DeletePromesa.show()">Eliminar</button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR PRESIDENTE -->
+<div bsModal #Add="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg" role="document">
+    <form #formAgregarPartido="ngForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="dialog-sizes-name1" class="modal-title pull-left">Agregando presidente...</h4>
+          <button type="button" class="close pull-right" (click)="Add.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" name="nombre" #nombre="ngModel" [(ngModel)]="modelPresidente.nombre" class="form-control"
+              placeholder="Enter description">
+          </div>
+          <div class="form-group">
+            <label for="partido">Partido</label>
+            <input type="text" name="partido" #partido="ngModel" [(ngModel)]="modelPresidente.partido"
+              class="form-control" placeholder="Enter description" disabled>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary col-4" data-dismiss="modal"
+            (click)="Add.hide()">Close</button>
+          <button type="button" (click)="agregar()" class="btn btn-outline-success col-4">Agregar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL EDITAR PRESIDENTE -->
+<div bsModal #Edit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg" role="document">
+    <form #formAgregarPartido="ngForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="dialog-sizes-name1" class="modal-title pull-left">Editando presidente...</h4>
+          <button type="button" class="close pull-right" (click)="Edit.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" name="nombre" #nombre="ngModel" [(ngModel)]="modelPresidente.nombre" class="form-control"
+              placeholder="Enter description">
+          </div>
+          <div class="form-group">
+            <label for="partido">Partido</label>
+            <input type="text" name="partido" #partido="ngModel" [(ngModel)]="modelPresidente.partido"
+              class="form-control" placeholder="Enter description">
+          </div>
+          <div class="form-group">
+            <label for="image">Imagen</label><br>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupFileAddon01">Actualizar</span>
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="inputGroupFile01 image"
+                  aria-describedby="inputGroupFileAddon01" (change)='fileChangeEvent($event)'>
+                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary col-4" data-dismiss="modal"
+            (click)="Edit.hide()">Close</button>
+          <button type="button" (click)="editar()" class="btn btn-outline-success col-4">Editar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL ELIMINAR PRESIDENTE -->
+<div bsModal #Delete="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg" role="document">
+    <form #formAgregarPartido="ngForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="dialog-sizes-name1" class="modal-title pull-left">Elimimando presidente...</h4>
+          <button type="button" class="close pull-right" (click)="Delete.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Eliminará el presidente {{ modelPresidente.nombre }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary col-4" data-dismiss="modal"
+            (click)="Delete.hide()">Close</button>
+          <button type="button" (click)="eliminar(); Delete.hide()" class="btn btn-outline-danger col-4">Sí</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR PROMESA -->
+<div bsModal #AddPromesa="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg" role="document">
+    <form #formAgregarPromesa="ngForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="dialog-sizes-name1" class="modal-title pull-left">Agregando promesa...</h4>
+          <button type="button" class="close pull-right" (click)="AddPromesa.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="descripcion">Descripcion</label>
+            <input type="text" name="descripcion" #descripcion="ngModel" [(ngModel)]="modelPromesa.descripcion"
+              class="form-control" placeholder="Enter description">
+          </div>
+          <div class="form-group">
+            <label for="candidato">Candidato</label>
+            <input type="text" name="candidato" #candidato="ngModel" [(ngModel)]="modelPromesa.candidato"
+              class="form-control" placeholder="Enter description" disabled>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary col-4" data-dismiss="modal"
+            (click)="AddPromesa.hide()">Close</button>
+          <button type="button" (click)="agregarPromesa()" class="btn btn-outline-success col-4">Agregar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL EDITAR PROMESA -->
+<div bsModal #EditPromesa="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg" role="document">
+    <form #formEditarPromesa="ngForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="dialog-sizes-name1" class="modal-title pull-left">Editando promesa...</h4>
+          <button type="button" class="close pull-right" (click)="EditPromesa.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="descripcion">Descripcion</label>
+            <input type="text" name="descripcion" #descripcion="ngModel" [(ngModel)]="modelPromesa.descripcion"
+              class="form-control" placeholder="Enter description">
+          </div>
+          <div class="form-group">
+            <label for="candidato">Candidato</label>
+            <input type="text" name="candidato" #candidato="ngModel" [(ngModel)]="modelPromesa.candidato"
+              class="form-control" placeholder="Enter description" disabled>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary col-4" data-dismiss="modal"
+            (click)="EditPromesa.hide()">Close</button>
+          <button type="button" (click)="editarPromesa()" class="btn btn-outline-success col-4">Editar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL ELIMINAR PROMESA -->
+<div bsModal #DeletePromesa="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg" role="document">
+    <form #formEliminarPromesa="ngForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="dialog-sizes-name1" class="modal-title pull-left">Elimimando promesa...</h4>
+          <button type="button" class="close pull-right" (click)="DeletePromesa.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Eliminará la promesa {{ modelPromesa.descripcion }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary col-4" data-dismiss="modal"
+            (click)="DeletePromesa.hide()">Close</button>
+          <button type="button" (click)="eliminarPromesa(); Delete.hide()"
+            class="btn btn-outline-danger col-4">Sí</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

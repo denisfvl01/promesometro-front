@@ -1,0 +1,66 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" routerLink="/home">
+    <img src="../../../assets/icons/prom.ico" width="30" height="30" alt=""
+      style="margin-top: -7px; background-color: white; border-radius: 100px">&nbsp;PROMESÓMETRO
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/home">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/login">Iniciar Sesión</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/partidos">Partidos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/perfil">Perfil</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<form #SignUpForm="ngForm" (ngSubmit)="registrar()">
+  <div class="card signup-form">
+    <div class="card-title">
+      <h2 class="col-12">Registrarse</h2>
+    </div>
+    <hr>
+    <div class="card-body">
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" name="nombre" #nombre="ngModel" [(ngModel)]="user.nombre" class="form-control" id="nombre"
+          placeholder="Ingrese su nombre" />
+      </div>
+      <div class="form-group">
+        <label for="apellido">Apellido</label>
+        <input type="text" name="apellido" #apellido="ngModel" [(ngModel)]="user.apellido" class="form-control"
+          id="apellido" placeholder="Ingrese su apellido" />
+      </div>
+      <div class="form-group">
+        <label for="nick">Nick</label>
+        <input type="text" name="Nick" #nick="ngModel" [(ngModel)]="user.nick" class="form-control" id="nick"
+          placeholder="Ingrese su nick" />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" name="Email" #email="ngModel" [(ngModel)]="user.email" class="form-control" id="email"
+          placeholder="Ingrese su email" />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" name="Password" #password="ngModel" [(ngModel)]="user.password" class="form-control"
+          id="password" placeholder="Ingrese su password" />
+      </div>
+    </div>
+    <div class="card-footer">
+      <button type="submit" value="Submit" class="btn btn-success col-12">Registrar</button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,29 @@
+.signup-form {
+    margin: 5% 10% 5% 10%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+h2 {
+    margin-top: 10px;
+    margin-bottom: -12px;
+    text-align: center;
+}
+
+.img-card {
+    padding-left: 35%;
+    padding-right: 35%;
+}
+
+@media only screen and (max-width: 770px) {
+    .img-card {
+        padding-left: 30%;
+        padding-right: 30%;
+    }
+}
+
+@media only screen and (max-width: 475px) {
+    .img-card {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
