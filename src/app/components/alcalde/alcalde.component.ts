@@ -28,6 +28,7 @@ export class AlcaldeComponent implements OnInit {
   public modelAlcalde: Alcalde;
   public promesas: PromesaAlcalde[] = null;
   public modelPromesa: PromesaAlcalde;
+  public posibilidadVotoPromesas: Boolean[] = [];
   public partido;
   constructor(
     // private _router: Router,
@@ -50,7 +51,7 @@ export class AlcaldeComponent implements OnInit {
 
   public limpiarVariables() {
     this.modelAlcalde = new Alcalde('', '', this.partido._id, '');
-    this.modelPromesa = new PromesaAlcalde('', '', '', 0, 0);
+    this.modelPromesa = new PromesaAlcalde('', '', '', [], 0, 0);
   }
 
   public setAlcalde(alcalde: Alcalde) {
@@ -66,27 +67,12 @@ export class AlcaldeComponent implements OnInit {
     this._alcaldeService.getAlcalde(this.token, this.partido).subscribe(
       response => {
         if (response.alcalde) {
-          if (response.alcalde) {
-            this.alcaldes = response.alcalde;
-            this.alcalde = this.alcaldes[0];
-          }
+          this.alcaldes = response.alcalde;
+          this.alcalde = this.alcaldes[0];
           this.status = 'ok';
           console.log(this.alcaldes);
           if (this.alcaldes.length > 0) {
-            this._promesaService.getPromesas(this.token, this.alcaldes[0]).subscribe(
-              response => {
-                if (response.promesas) {
-                  this.promesas = response.promesas;
-                  this.status = 'ok';
-                  console.log(this.promesas);
-                }
-              }, error => {
-                let errorMessage = <any>error;
-                console.log(errorMessage);
-                if (errorMessage != null)
-                  this.status = 'error';
-              }
-            );
+            this.listarPromesas();
           }
         }
       }, error => {
@@ -99,13 +85,12 @@ export class AlcaldeComponent implements OnInit {
   }
 
   public listarPromesas() {
-    // this.partido = this._partidoService.getPartidoOnSessionStorage();
-    this._promesaService.getPromesas(this.token, this.alcaldes[0]).subscribe(
+    this._promesaService.getPromesas(this.token, this.alcalde).subscribe(
       response => {
         if (response.promesas) {
           this.promesas = response.promesas;
           this.status = 'ok';
-          console.log(this.promesas);
+          this.posibilidadDeVoto();
         }
       }, error => {
         let errorMessage = <any>error;
@@ -120,7 +105,6 @@ export class AlcaldeComponent implements OnInit {
     this._alcaldeService.addAlcalde(this.modelAlcalde, this.token).subscribe(
       response => {
         if (response.alcalde) {
-          console.log(response.alcalde);
           this.listarAlcalde();
           this.limpiarVariables();
           this.status = 'ok';
@@ -138,7 +122,6 @@ export class AlcaldeComponent implements OnInit {
     this._alcaldeService.updateAlcalde(this.modelAlcalde, this.token).subscribe(
       response => {
         if (response.alcalde) {
-          console.log(response.alcalde);
           this.listarAlcalde();
           this.status = 'ok';
           // subir imagen usuario
@@ -164,7 +147,6 @@ export class AlcaldeComponent implements OnInit {
     this._alcaldeService.deleteAlcalde(this.modelAlcalde._id, this.token).subscribe(
       response => {
         if (response.alcalde) {
-          console.log(response.alcalde);
           this.listarAlcalde();
           this.limpiarVariables();
           this.status = 'ok';
@@ -178,12 +160,27 @@ export class AlcaldeComponent implements OnInit {
     );
   }
 
+  posibilidadDeVoto() {
+    this.posibilidadVotoPromesas = []
+    for (let i = 0; i < this.promesas.length; i++) {
+      this.posibilidadVotoPromesas.push(true);
+      const promesa = this.promesas[i];
+      promesa.votantes.forEach(votante => {
+        if (votante == this.identity._id) {
+          this.posibilidadVotoPromesas[i] = false;
+        } else {
+          this.posibilidadVotoPromesas[i] = true;
+        }
+      });
+      console.log(this.posibilidadVotoPromesas);
+    }
+  }
+
   public agregarPromesa() {
-    this.modelPromesa.candidato = this.alcaldes[0]._id;
+    this.modelPromesa.candidato = this.alcalde._id;
     this._promesaService.addPromesa(this.modelPromesa, this.token).subscribe(
       response => {
         if (response.promesa) {
-          console.log(response.promesa);
           this.listarPromesas();
           this.limpiarVariables();
           this.status = 'ok';
@@ -201,7 +198,6 @@ export class AlcaldeComponent implements OnInit {
     this._promesaService.updatePromesa(this.modelPromesa, this.token).subscribe(
       response => {
         if (response.promesa) {
-          console.log(response.promesa);
           this.listarPromesas();
           this.limpiarVariables();
           this.status = 'ok';
@@ -219,7 +215,6 @@ export class AlcaldeComponent implements OnInit {
     this._promesaService.deletePromesa(this.modelPromesa, this.token).subscribe(
       response => {
         if (response.promesa) {
-          console.log(response.promesa);
           this.listarPromesas();
           this.limpiarVariables();
           this.status = 'ok';
@@ -234,11 +229,11 @@ export class AlcaldeComponent implements OnInit {
   }
 
   public votarSi(promesa: PromesaAlcalde) {
-    this._promesaService.votarSi(promesa._id, this.token).subscribe(
+    this._promesaService.votarSi(promesa, this.token).subscribe(
       response => {
         if (response.promesa) {
-          console.log(response.promesa);
           this.listarPromesas();
+          this.posibilidadDeVoto();
         }
       }, error => {
         let errorMessage = <any>error;
@@ -250,11 +245,11 @@ export class AlcaldeComponent implements OnInit {
   }
 
   public votarNo(promesa: PromesaAlcalde) {
-    this._promesaService.votarNo(promesa._id, this.token).subscribe(
+    this._promesaService.votarNo(promesa, this.token).subscribe(
       response => {
         if (response.promesa) {
-          console.log(response.promesa);
           this.listarPromesas();
+          this.posibilidadDeVoto();
         }
       }, error => {
         let errorMessage = <any>error;

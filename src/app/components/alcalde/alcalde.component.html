@@ -29,7 +29,7 @@
   <div class="container-header">
     <h1 class="font-weight-light text-white">Conoce al alclade del partido {{ partido.nombre }}</h1>
     <button type="button" class="btn btn-warning col-9" (click)="Add.show()"
-      *ngIf="!alcalde && !identity.rol == 'ROL_USUARIO'">Agregar
+      *ngIf="!alcalde && identity.rol == 'ROL_ADMIN'">Agregar
       alcalde</button>
   </div>
 </header>
@@ -45,7 +45,7 @@
           <h5 class="card-title mb-0" *ngIf="alcalde.nombre">{{ alcalde.nombre }}</h5>
         </div>
         <div class="card-footer col-12 align-content-stretch">
-          <p style="text-align: center" *ngIf="!identity.rol == 'ROL_USUARIO'">
+          <p style="text-align: center" *ngIf="identity.rol == 'ROL_ADMIN'">
             <button type="button" class="btn btn-info botones"
               (click)="setAlcalde(alcalde); Edit.show()">Editar</button>
             <button type="button" class="btn btn-warning botones"
@@ -59,7 +59,7 @@
         <small class="text-primary" style="font-size: 30px; width: 100%; line-height: 1;">Votación de
           promesas</small><br>
         <button type="button" class="btn btn-warning col-12" (click)="AddPromesa.show()"
-          *ngIf="!identity.rol == 'ROL_USUARIO'">Agregar promesa</button>
+          *ngIf="identity.rol == 'ROL_ADMIN'">Agregar promesa</button>
       </h1>
       <div class="col-sm" *ngFor="let promesa of promesas; let i = index">
         <div class="card border-1 shadow">
@@ -80,7 +80,7 @@
           </div>
           <div class="card-footer col-12 align-content-stretch">
             <div class="btn-group col-12">
-              <p style="text-align: center" class="col-12" *ngIf="!identity.rol == 'ROL_USUARIO'">
+              <p style="text-align: center" class="col-12" *ngIf="identity.rol == 'ROL_ADMIN'">
                 <button type="button" class="btn btn-info botones"
                   (click)="setPromesa(promesa); EditPromesa.show()">Editar</button>
                 <button type="button" class="btn btn-warning botones"
@@ -111,11 +111,6 @@
             <input type="text" name="nombre" #nombre="ngModel" [(ngModel)]="modelAlcalde.nombre" class="form-control"
               placeholder="Enter description">
           </div>
-          <div class="form-group">
-            <label for="partido">Partido</label>
-            <input type="text" name="partido" #partido="ngModel" [(ngModel)]="modelAlcalde.partido" class="form-control"
-              placeholder="Enter description" disabled>
-          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-primary col-4" data-dismiss="modal"
@@ -143,11 +138,6 @@
             <label for="nombre">Nombre</label>
             <input type="text" name="nombre" #nombre="ngModel" [(ngModel)]="modelAlcalde.nombre" class="form-control"
               placeholder="Enter name">
-          </div>
-          <div class="form-group">
-            <label for="partido">Partido</label>
-            <input type="text" name="partido" #partido="ngModel" [(ngModel)]="modelAlcalde.partido" class="form-control"
-              placeholder="Enter description">
           </div>
           <div class="form-group">
             <label for="image">Imagen</label><br>
@@ -214,11 +204,6 @@
             <input type="text" name="descripcion" #descripcion="ngModel" [(ngModel)]="modelPromesa.descripcion"
               class="form-control" placeholder="Enter description">
           </div>
-          <div class="form-group">
-            <label for="candidato">Candidato</label>
-            <input type="text" name="candidato" #candidato="ngModel" [(ngModel)]="modelPromesa.candidato"
-              class="form-control" placeholder="Enter description" disabled>
-          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-primary col-4" data-dismiss="modal"
@@ -247,11 +232,6 @@
             <label for="descripcion">Descripcion</label>
             <input type="text" name="descripcion" #descripcion="ngModel" [(ngModel)]="modelPromesa.descripcion"
               class="form-control" placeholder="Enter description">
-          </div>
-          <div class="form-group">
-            <label for="candidato">Candidato</label>
-            <input type="text" name="candidato" #candidato="ngModel" [(ngModel)]="modelPromesa.candidato"
-              class="form-control" placeholder="Enter description" disabled>
           </div>
         </div>
         <div class="modal-footer">

@@ -37,14 +37,15 @@ export class PromesasAlcaldeService {
     return this._http.delete(`${this.url}eliminar-promesa-alcalde/${id}`, { headers: headers });
   }
 
-  votarSi(id, token): Observable<any> {
-    console.log(token);
+  votarSi(promesa: PromesaAlcalde, token): Observable<any> {
+    let params = JSON.stringify(promesa);
     let headers = new HttpHeaders().set('Content-Type', 'Application/json').set('Authorization', token);
-    return this._http.put(`${this.url}votar-si-promesa-alcalde/${id}`, { headers: headers });
+    return this._http.put(`${this.url}votar-si-promesa-alcalde/${promesa._id}`, { headers: headers });
   }
 
-  votarNo(id, token): Observable<any> {
+  votarNo(promesa: PromesaAlcalde, token): Observable<any> {
+    let params = JSON.stringify(promesa);
     let headers = new HttpHeaders().set('Content-Type', 'Application/json').set('Authorization', token);
-    return this._http.put(`${this.url}votar-no-promesa-alcalde/${id}`, { headers: headers });
+    return this._http.put(`${this.url}votar-no-promesa-alcalde/${promesa._id}`, { headers: headers });
   }
 }

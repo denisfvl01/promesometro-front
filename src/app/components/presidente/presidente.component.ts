@@ -27,6 +27,7 @@ export class PresidenteComponent implements OnInit {
   public modelPresidente: Presidente;
   public promesas: PromesaPresidente[] = null;
   public modelPromesa: PromesaPresidente;
+  public posibilidadVotoPromesas: Boolean[] = [];
   public partido;
   constructor(
     private _router: Router,
@@ -49,7 +50,7 @@ export class PresidenteComponent implements OnInit {
 
   public limpiarVariables() {
     this.modelPresidente = new Presidente('', '', this.partido._id, '');
-    this.modelPromesa = new PromesaPresidente('', '', '', 0, 0);
+    this.modelPromesa = new PromesaPresidente('', '', '', [], 0, 0);
     // this.presidente = new Presidente('', '', '', '');
   }
 
@@ -66,46 +67,29 @@ export class PresidenteComponent implements OnInit {
     this._presidenteService.getPresidente(this.token, this.partido).subscribe(
       response => {
         if (response.presidente) {
-          if (response.presidente) {
-            this.presidentes = response.presidente;
-            this.presidente = this.presidentes[0];
-          }
+          this.presidentes = response.presidente;
+          this.presidente = this.presidentes[0];
           this.status = 'ok';
-          console.log(this.presidentes);
           if (this.presidentes.length > 0) {
-            this._promesaService.getPromesas(this.token, this.presidentes[0]).subscribe(
-              response => {
-                if (response.promesas) {
-                  this.promesas = response.promesas;
-                  this.status = 'ok';
-                  console.log(this.promesas);
-                }
-              }, error => {
-                let errorMessage = <any>error;
-                console.log(errorMessage);
-                if (errorMessage != null)
-                  this.status = 'error';
-              }
-            );
+            this.listarPromesas();
           }
         }
       }, error => {
         let errorMessage = <any>error;
         console.log(errorMessage);
         if (errorMessage != null)
-          this.status = 'error';
+        this.status = 'error';
       }
-    );
-  }
+      );
+    }
 
   public listarPromesas() {
-    // this.partido = this._partidoService.getPartidoOnSessionStorage();
-    this._promesaService.getPromesas(this.token, this.presidentes[0]).subscribe(
+    this._promesaService.getPromesas(this.token, this.presidente).subscribe(
       response => {
         if (response.promesas) {
           this.promesas = response.promesas;
           this.status = 'ok';
-          console.log(this.promesas);
+          this.posibilidadDeVoto();
         }
       }, error => {
         let errorMessage = <any>error;
@@ -119,8 +103,7 @@ export class PresidenteComponent implements OnInit {
   public agregar() {
     this._presidenteService.addPresidente(this.modelPresidente, this.token).subscribe(
       response => {
-        if (response.Presidente) {
-          console.log(response.Presidente);
+        if (response.presidente) {
           this.listarPresidente();
           this.limpiarVariables();
           this.status = 'ok';
@@ -138,16 +121,15 @@ export class PresidenteComponent implements OnInit {
     this._presidenteService.updatePresidente(this.modelPresidente, this.token).subscribe(
       response => {
         if (response.presidente) {
-          console.log(response.presidente);
           this.listarPresidente();
           this.status = 'ok';
           // subir imagen usuario
           if (this.filesToUpload) {
             this._uploadService.makeFileRequest(this.url + 'subir-imagen-presidente/' + this.modelPresidente._id, [], this.filesToUpload, this.token, 'image')
-            .then((result: any) => {
-              this.modelPresidente.image = result.presidente.image;
-              this.listarPresidente();
-              this.limpiarVariables();
+              .then((result: any) => {
+                this.modelPresidente.image = result.presidente.image;
+                this.listarPresidente();
+                this.limpiarVariables();
               });
           }
         }
@@ -164,7 +146,6 @@ export class PresidenteComponent implements OnInit {
     this._presidenteService.deletePresidente(this.modelPresidente._id, this.token).subscribe(
       response => {
         if (response.presidente) {
-          console.log(response.presidente);
           this.listarPresidente();
           this.limpiarVariables();
           this.status = 'ok';
@@ -179,11 +160,10 @@ export class PresidenteComponent implements OnInit {
   }
 
   public agregarPromesa() {
-    this.modelPromesa.candidato = this.presidentes[0]._id;
+    this.modelPromesa.candidato = this.presidente._id;
     this._promesaService.addPromesa(this.modelPromesa, this.token).subscribe(
       response => {
         if (response.promesa) {
-          console.log(response.promesa);
           this.listarPromesas();
           this.limpiarVariables();
           this.status = 'ok';
@@ -201,7 +181,6 @@ export class PresidenteComponent implements OnInit {
     this._promesaService.updatePromesa(this.modelPromesa, this.token).subscribe(
       response => {
         if (response.promesa) {
-          console.log(response.promesa);
           this.listarPromesas();
           this.limpiarVariables();
           this.status = 'ok';
@@ -219,7 +198,6 @@ export class PresidenteComponent implements OnInit {
     this._promesaService.deletePromesa(this.modelPromesa._id, this.token).subscribe(
       response => {
         if (response.promesa) {
-          console.log(response.promesa);
           this.listarPromesas();
           this.limpiarVariables();
           this.status = 'ok';
@@ -233,12 +211,28 @@ export class PresidenteComponent implements OnInit {
     );
   }
 
+  posibilidadDeVoto() {
+    this.posibilidadVotoPromesas = []
+    for (let i = 0; i < this.promesas.length; i++) {
+      this.posibilidadVotoPromesas.push(true);
+      const promesa = this.promesas[i];
+      promesa.votantes.forEach(votante => {
+        if (votante == this.identity._id) {
+          this.posibilidadVotoPromesas[i] = false;
+        } else {
+          this.posibilidadVotoPromesas[i] = true;
+        }
+      });
+      console.log(this.posibilidadVotoPromesas);
+    }
+  }
+
   public votarSi(promesa: PromesaPresidente) {
-    this._promesaService.votarSi(promesa._id, this.token).subscribe(
+    this._promesaService.votarSi(promesa, this.token).subscribe(
       response => {
         if (response.promesa) {
-          console.log(response.promesa);
           this.listarPromesas();
+          this.posibilidadDeVoto();
         }
       }, error => {
         let errorMessage = <any>error;
@@ -250,11 +244,11 @@ export class PresidenteComponent implements OnInit {
   }
 
   public votarNo(promesa: PromesaPresidente) {
-    this._promesaService.votarNo(promesa._id, this.token).subscribe(
+    this._promesaService.votarNo(promesa, this.token).subscribe(
       response => {
         if (response.promesa) {
-          console.log(response.promesa);
           this.listarPromesas();
+          this.posibilidadDeVoto();
         }
       }, error => {
         let errorMessage = <any>error;

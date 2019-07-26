@@ -28,8 +28,8 @@
 <header class="bg-info text-center py-5 mb-4">
   <div class="container-header">
     <h1 class="font-weight-light text-white">Conoce al presidente del partido {{ partido.nombre }}</h1>
-    <button type="button" class="btn btn-warning col-9" (click)="Add.show()"
-      *ngIf="!presidente && !identity.rol == 'ROL_USUARIO'">Agregar
+    <button type="button" class="btn btn-warning col-9" (click)="Add.show()" *ngIf="!presidente && identity.rol == 'ROL_ADMIN'"
+     >Agregar <!-- *ngIf="!presidente && identity.rol == 'ROL_ADMIN'" -->
       presidente</button>
   </div>
 </header>
@@ -44,8 +44,8 @@
         <div class="card-body text-center">
           <h5 class="card-title mb-0" *ngIf="presidente.nombre">{{ presidente.nombre }}</h5>
         </div>
-        <div class="card-footer col-12 align-content-stretch">
-          <p style="text-align: center" *ngIf="!identity.rol == 'ROL_USUARIO'">
+        <div class="card-footer col-12 align-content-stretch" *ngIf="identity.rol == 'ROL_ADMIN'">
+          <p style="text-align: center" ><!--  *ngIf="identity.rol == 'ROL_ADMIN'" -->
             <button type="button" class="btn btn-info botones"
               (click)="setPresidente(presidente); Edit.show()">Editar</button>
             <button type="button" class="btn btn-warning botones"
@@ -58,8 +58,8 @@
       <h1>
         <small class="text-primary" style="font-size: 30px; width: 100%; line-height: 1;">Votación de
           promesas</small><br>
-        <button type="button" class="btn btn-warning col-12" (click)="AddPromesa.show()"
-          *ngIf="!identity.rol == 'ROL_USUARIO'">Agregar promesa</button>
+        <button type="button" class="btn btn-warning col-12" (click)="AddPromesa.show()" *ngIf="identity.rol == 'ROL_ADMIN'"
+          >Agregar promesa</button><!--  *ngIf="identity.rol == 'ROL_ADMIN'" -->
       </h1>
       <div class="col-sm" *ngFor="let promesa of promesas; let i = index">
         <div class="card border-1 shadow">
@@ -67,20 +67,22 @@
             <h5 class="card-title mb-0">{{ promesa.descripcion }}</h5>
           </div>
           <div class="card-body">
-            <a>¿Está cumpliendo con la promesa? </a>
-            <div class="btn-group" role="group">
-              <button type="button" class="btn btn-warning botones" (click)="votarSi(promesa)">Sí</button>
-              <button type="button" class="btn btn-warning botones" (click)="votarNo(promesa)">No</button>
-            </div><br><br>
+            <div *ngIf="posibilidadVotoPromesas[i]" >
+              <a>¿Está cumpliendo con la promesa? </a>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-warning botones" (click)="votarSi(promesa)">Sí</button>
+                <button type="button" class="btn btn-warning botones" (click)="votarNo(promesa)">No</button>
+              </div><br><br>
+            </div>
             <div class="mb-2">
-              <progressbar class="progress-striped active" [value]="promesas[i].votoSi" type="danger">
+              <progressbar class="progress-striped active" [value]="(promesa.votoSi*100) / (promesa.votoSi+promesa.votoNo)" type="danger">
                 <i>{{promesa.votoSi}} /
                   {{promesa.votoSi + promesa.votoNo}}</i></progressbar>
             </div>
           </div>
           <div class="card-footer col-12 align-content-stretch">
             <div class="btn-group col-12">
-              <p style="text-align: center" class="col-12" *ngIf="!identity.rol == 'ROL_USUARIO'">
+              <p style="text-align: center" class="col-12" *ngIf="identity.rol == 'ROL_ADMIN'"><!-- *ngIf="identity.rol == 'ROL_ADMIN'" -->
                 <button type="button" class="btn btn-info botones"
                   (click)="setPromesa(promesa); EditPromesa.show()">Editar</button>
                 <button type="button" class="btn btn-warning botones"
@@ -111,16 +113,11 @@
             <input type="text" name="nombre" #nombre="ngModel" [(ngModel)]="modelPresidente.nombre" class="form-control"
               placeholder="Enter description">
           </div>
-          <div class="form-group">
-            <label for="partido">Partido</label>
-            <input type="text" name="partido" #partido="ngModel" [(ngModel)]="modelPresidente.partido"
-              class="form-control" placeholder="Enter description" disabled>
-          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-primary col-4" data-dismiss="modal"
             (click)="Add.hide()">Close</button>
-          <button type="button" (click)="agregar()" class="btn btn-outline-success col-4">Agregar</button>
+          <button type="button" (click)="agregar();" class="btn btn-outline-success col-4">Agregar</button>
         </div>
       </div>
     </form>
@@ -143,11 +140,6 @@
             <label for="nombre">Nombre</label>
             <input type="text" name="nombre" #nombre="ngModel" [(ngModel)]="modelPresidente.nombre" class="form-control"
               placeholder="Enter description">
-          </div>
-          <div class="form-group">
-            <label for="partido">Partido</label>
-            <input type="text" name="partido" #partido="ngModel" [(ngModel)]="modelPresidente.partido"
-              class="form-control" placeholder="Enter description">
           </div>
           <div class="form-group">
             <label for="image">Imagen</label><br>
@@ -214,11 +206,6 @@
             <input type="text" name="descripcion" #descripcion="ngModel" [(ngModel)]="modelPromesa.descripcion"
               class="form-control" placeholder="Enter description">
           </div>
-          <div class="form-group">
-            <label for="candidato">Candidato</label>
-            <input type="text" name="candidato" #candidato="ngModel" [(ngModel)]="modelPromesa.candidato"
-              class="form-control" placeholder="Enter description" disabled>
-          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-primary col-4" data-dismiss="modal"
@@ -247,11 +234,6 @@
             <label for="descripcion">Descripcion</label>
             <input type="text" name="descripcion" #descripcion="ngModel" [(ngModel)]="modelPromesa.descripcion"
               class="form-control" placeholder="Enter description">
-          </div>
-          <div class="form-group">
-            <label for="candidato">Candidato</label>
-            <input type="text" name="candidato" #candidato="ngModel" [(ngModel)]="modelPromesa.candidato"
-              class="form-control" placeholder="Enter description" disabled>
           </div>
         </div>
         <div class="modal-footer">
